@@ -1,0 +1,58 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section class="category-hero glass-effect">
+    <div class="container">
+        <div class="hero-content">
+            <h1>{{ category }}</h1>
+            <p>{{ description }}</p>
+        </div>
+    </div>
+</section>
+
+<section id="category-news" class="trending">
+    <div class="container">
+        <div class="section-title">
+            <h2><i class="fas fa-newspaper"></i> Latest {{ category }} News</h2>
+        </div>
+        <div class="trending-container">
+            {% if articles %}
+                {% for article in articles %}
+                <div class="trending-card">
+                    <div class="card-image">
+                        <a href="{{ article.url }}" target="_blank">
+                            <img src="{{ article.image_url or url_for('static', filename='default.jpg') }}" alt="{{ article.title }}" loading="lazy" />
+                        </a>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-tags">
+                            <span class="tag">{{ article.source or 'News' }}</span>
+                            {% if article.published_at %}
+                            <span class="tag info-tag">{{ article.published_at[:10] }}</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="card-title">
+                            <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+                        </h3>
+                        <p class="card-desc">{{ article.description or article.content_snippet }}</p>
+                        <div class="card-meta">
+                            <div class="card-author">
+                                <i class="fas fa-user-circle"></i>
+                                <span>{{ article.author or 'Unknown' }}</span>
+                            </div>
+                            <a href="{{ article.url }}" target="_blank" class="read-more">Read More <i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-articles glass-effect">
+                    <i class="fas fa-newspaper"></i>
+                    <h3>No articles available</h3>
+                    <p>Please check back later for the latest {{ category }} news updates.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %} 
