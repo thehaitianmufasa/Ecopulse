@@ -18,7 +18,14 @@
                     Eco<span>News</span>
                 </a>
             </div>
-            <nav>
+            
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" aria-label="Open Menu">
+                <span class="hamburger"></span>
+            </button>
+
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
                 <ul>
                     <li><a href="{{ url_for('api.markets_page') }}"><i class="fas fa-chart-line"></i> Markets</a></li>
                     <li><a href="{{ url_for('api.stocks_page') }}"><i class="fas fa-chart-bar"></i> Stocks</a></li>
@@ -27,6 +34,24 @@
                     <li><a href="{{ url_for('api.tech_page') }}"><i class="fas fa-microchip"></i> Tech</a></li>
                 </ul>
             </nav>
+
+            <!-- Mobile Navigation Overlay -->
+            <div class="mobile-nav">
+                <div class="mobile-nav-header">
+                    <div class="logo">Eco<span>News</span></div>
+                    <button class="close-menu-btn" aria-label="Close Menu">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <ul>
+                    <li><a href="{{ url_for('api.markets_page') }}"><i class="fas fa-chart-line"></i> Markets</a></li>
+                    <li><a href="{{ url_for('api.stocks_page') }}"><i class="fas fa-chart-bar"></i> Stocks</a></li>
+                    <li><a href="{{ url_for('api.crypto_page') }}"><i class="fab fa-bitcoin"></i> Crypto</a></li>
+                    <li><a href="{{ url_for('api.real_estate_page') }}"><i class="fas fa-home"></i> Real Estate</a></li>
+                    <li><a href="{{ url_for('api.tech_page') }}"><i class="fas fa-microchip"></i> Tech</a></li>
+                </ul>
+            </div>
+
             <div class="header-actions">
                 <button class="search-toggle"><i class="fas fa-search"></i></button>
                 <button class="theme-toggle"><i class="fas fa-moon"></i></button>
@@ -216,6 +241,30 @@
             document.body.classList.toggle('light-theme');
             themeToggle.querySelector('i').classList.toggle('fa-sun');
             themeToggle.querySelector('i').classList.toggle('fa-moon');
+        });
+
+        // Mobile Menu Functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const closeMenuBtn = document.querySelector('.close-menu-btn');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const body = document.body;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileNav.classList.add('active');
+            body.style.overflow = 'hidden';
+        });
+
+        closeMenuBtn.addEventListener('click', () => {
+            mobileNav.classList.remove('active');
+            body.style.overflow = '';
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNav.classList.remove('active');
+                body.style.overflow = '';
+            });
         });
     </script>
 </body>
