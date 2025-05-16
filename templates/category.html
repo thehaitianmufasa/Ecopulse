@@ -21,7 +21,11 @@
                 <div class="trending-card">
                     <div class="card-image">
                         <a href="{{ article.url }}" target="_blank">
-                            <img src="{{ article.image_url or url_for('static', filename='default.jpg') }}" alt="{{ article.title }}" loading="lazy" />
+                            {% if article.image_url %}
+                                <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy" onerror="handleImageError(this)"/>
+                            {% else %}
+                                <img src="{{ url_for('static', filename='default-news.svg') }}" alt="Default news image" loading="lazy"/>
+                            {% endif %}
                         </a>
                     </div>
                     <div class="card-content">

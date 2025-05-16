@@ -254,6 +254,16 @@
             img.src = defaultImage;
         }
 
+        // Load images progressively
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.card-image img[loading="lazy"]');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    img.style.opacity = '1';
+                });
+            });
+        });
+
         // Theme toggle
         const themeToggle = document.querySelector('.theme-toggle');
         themeToggle.addEventListener('click', () => {
