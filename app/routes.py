@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 import logging
 from functools import wraps
+import re
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -182,10 +183,25 @@ def get_economic_news():
         "last_updated": datetime.now().isoformat()
     })
 
+def clean_article_content(content):
+    """Clean and sanitize article content."""
+    if not content:
+        return ""
+    # Remove any script-like content
+    if isinstance(content, str):
+        content = content.replace('window.open', '')
+        content = content.replace('javascript:', '')
+        # Remove HTML tags
+        content = re.sub(r'<[^>]+>', '', content)
+        # Remove special characters
+        content = content.replace('&gt;', '>').replace('&lt;', '<').replace('&amp;', '&')
+        # Truncate if too long
+        return content[:200] + '...' if len(content) > 200 else content
+    return ""
+
 @api.route('/', methods=['GET'])
 def render_news_page():
     try:
-        # Direct API call instead of self-request
         query = 'economy OR inflation OR "interest rates" OR "federal reserve"'
         days = 1
         from_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -210,13 +226,13 @@ def render_news_page():
         for article in data.get("articles", []):
             if article.get("title") and article.get("url"):
                 news_data.append({
-                    "title": article.get("title"),
+                    "title": clean_article_content(article.get("title")),
                     "source": article.get("source", {}).get("name"),
                     "author": article.get("author"),
-                    "description": article.get("description"),
+                    "description": clean_article_content(article.get("description")),
                     "url": article.get("url"),
                     "published_at": article.get("publishedAt"),
-                    "content_snippet": article.get("content", "").split("[+")[0],
+                    "content_snippet": clean_article_content(article.get("content")),
                     "image_url": article.get("urlToImage")
                 })
         return render_template('index.html', articles=news_data)
